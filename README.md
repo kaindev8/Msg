@@ -23,5 +23,7 @@ PHP8.0 + MySQL5.7
 **后台**
 
 后台地址：你的域名/admin (例如：localhost/admin)
+
 管理员账号：admin
+
 管理员密码：123456
