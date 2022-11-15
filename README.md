@@ -19,6 +19,22 @@ PHP8.0 + MySQL5.7
 1. 导入根目录的 data.sql 文件
 2. 打开 config/database.php
 3. 设置数据库名，数据库用户名，数据库密码
+4. 设置运行目录为
+
+		/public
+
+5. 设置伪静态为
+
+```
+location ~* (runtime|application)/{
+	return 403;
+}
+location / {
+	if (!-e $request_filename){
+		rewrite  ^(.*)$  /index.php?s=$1  last;   break;
+	}
+}
+```
 
 **后台**
 
