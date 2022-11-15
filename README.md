@@ -19,3 +19,8 @@ PHP8.0 + MySQL5.7
 1. 导入根目录的 data.sql 文件
 2. 打开 config/database.php
 3. 设置数据库名，数据库用户名，数据库密码
+
+**后台**
+后台地址：你的域名/admin (例如：localhost/admin)
+管理员账号：admin
+管理员密码：123456
