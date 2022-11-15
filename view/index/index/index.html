@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    {:token_meta()}
+    <meta name="keywords" content="{$config.key}">
+    <meta name="description" content="{$config.desc}">
+    <meta name="author" content="i@kain8.cn">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{$config.sitename}</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <!-- 样 式 文 件 -->
+    <link rel="stylesheet" href="/static/component/pear/css/pear.css" />
+    <link rel="stylesheet" href="/static/admin/css/other/person.css" />
+</head>
+
+<body>
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding: 25px;">
+                    <div class="text-center layui-text">
+                        <div class="user-info-head">
+                            <img src="https://q.qlogo.cn/headimg_dl?dst_uin={$admin.qq}&spec=100" id="userAvatar"
+                                width="115px" height="115px" alt="">
+                        </div>
+                        <h2 style="padding-top: 20px;font-size: 20px;">
+                            {$info.nickname}
+                        </h2>
+                        <p style="padding-top: 8px;margin-top: 10px;font-size: 13.5px;"><i
+                                class="pear-icon pear-icon-map"></i> China, 中 国 </p>
+                    </div>
+                </div>
+                {if $info.sign != ''}
+                <div
+                    style="height: 45px;border-top: 1px whitesmoke solid;text-align: center;line-height: 45px;font-size: 13.5px;">
+                    <span>
+                        {$info.sign}
+                    </span>
+                </div>
+                {/if}
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-tab layui-tab-brief" lay-filter="TabBrief">
+                    <ul class="layui-tab-title text-center">
+                        <li class="layui-this">说一句</li>
+                        <li>看一句</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <!-- 说一句 -->
+                        <div class="layui-tab-item layui-show">
+                            <div class="layui-col-md12">
+                                <div class="layui-card">
+                                    <div class="layui-card-header">
+                                        想 对 我 说
+                                    </div>
+                                    <div class="layui-card-body">
+                                        <form class="layui-form" action="" onsubmit="return false">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">如何称呼你?</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" name="nickname"
+                                                        placeholder=" 输 入 你 的 昵 称 .. " autocomplete="off"
+                                                        class="layui-input">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">公开可见?</label>
+                                                <div class="layui-input-block">
+                                                    <input type="checkbox" name="public" checked lay-skin="switch">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item layui-form-text">
+                                                <label class="layui-form-label">内容</label>
+                                                <div class="layui-input-block">
+                                                    <textarea name="content" placeholder=" 想 说 些 什 么 ? "
+                                                        class="layui-textarea"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <div class="layui-input-block">
+                                                    <button class="pear-btn layui-col-md12 pear-btn-success submit"
+                                                        lay-submit lay-filter="submit"> 好 了 </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {if $config.music == 1}
+                            <audio id="music" src="/static/music/{$config.music_name}" loop autoplay controls></audio>
+                            {/if}
+                        </div>
+
+                        <!-- 看一句 -->
+                        <div class="layui-tab-item">
+                            <div class="layui-col-md12">
+                                <div class="layui-card">
+                                    <div class="layui-card-header">
+                                        随 机 一 句
+                                    </div>
+                                    <div class="layui-card-body">
+                                        <ul class="list">
+                                            {if $msg_count >= 1}
+                                            <div class="layui-row layui-card layui-col-space10" style="margin: 15px;">
+
+                                                <li class="list-item">
+                                                    <span class="title">昵称：</span>
+                                                    <span class="content">{$message.0.nickname}</span>
+                                                </li>
+                                                <li class="list-item">
+                                                    <span class="title">Ta 说：</span>
+                                                    <span class="content">{$message.0.content}</span>
+                                                </li>
+                                                <li class="list-item">
+                                                    <span class="title">时间：</span>
+                                                    <span class="content">{$message.0.time}</span>
+                                                </li>
+                                                <li class="list-item">
+                                                    <span class="title">来源IP：</span>
+                                                    <span class="content">{$message.0.ip}</span>
+                                                </li>
+                                            </div>
+                                            {else}
+                                            <li class="list-item">
+                                                <span class="title">暂无内容 .. </span>
+                                                <span class="footer"></span>
+                                            </li>
+                                            {/if}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 依 赖 脚 本 -->
+    <script src="/static/component/layui/layui.js"></script>
+    <script src="/static/component/pear/pear.js"></script>
+    {if $config.cherry == 1}
+    <!-- 樱 花 飘 落 -->
+    <script src="/static/js/cherry.js"></script>
+    {/if}
+    <script>
+        layui.use(['form', 'button', 'toast', 'jquery', 'layer', 'code', 'admin'], function () {
+            let form = layui.form;
+            let button = layui.button;
+            let toast = layui.toast;
+            let $ = layui.jquery;
+
+            //表单提交
+            form.on('submit(submit)', function (data) {
+                // layer.msg(JSON.stringify(data.field));
+                console.log(data.field);
+                /// 动画
+                var dom = button.load({
+                    elem: '.submit'
+                });
+                if (data.field.nickname == '') {
+                    dom.stop(function () {
+                        toast.info({ title: 'Info', message: '昵称不能为空~', position: 'topCenter' });
+                    });
+                } else if (data.field.content == '') {
+                    dom.stop(function () {
+                        toast.info({ title: 'Info', message: '内容不能为空~', position: 'topCenter' });
+                    });
+                } else {
+                    $.ajax({
+                        cache: false,
+                        url: "/index/Submit/index",
+                        type: "POST",
+                        data: data.field,
+                        dataType: "json",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (res) {
+                            if (res.code == 200) {
+                                dom.stop(function () {
+                                    toast.success({ title: 'Success', message: res.msg, position: 'topCenter' });
+                                });
+                                setTimeout(() => {
+                                    window.location.href = '/'
+                                }, 1500);
+                            } else {
+                                dom.stop(function () {
+                                    toast.error({ title: 'Error', message: res.msg, position: 'topCenter' });
+                                });
+                            }
+                        }
+                    });
+                }
+                return false;
+            });
+        });
+    </script>
+</body>
+
+</html>

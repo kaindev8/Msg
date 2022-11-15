@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统设置</title>
+    <link rel="stylesheet" href="/static/component/pear/css/pear.css">
+</head>
+
+<body class="pear-container">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <form class="layui-form edit-form">
+                    <div class="layui-tab layui-tab-brief" lay-filter="TabBrief">
+                        <ul class="layui-tab-title">
+                            <li class="layui-this">基本设置</li>
+                            <li>个性设置</li>
+                        </ul>
+                        <div class="layui-tab-content">
+                            <!--基本设置-->
+                            <div class="layui-tab-item layui-show">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">
+                                        网站名称
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input" placeholder=" 简 短 的 名 称 .."
+                                            name="sitename" value="{$config.sitename}" type="text" />
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">
+                                        网站关键词
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input"
+                                            placeholder=" 多 个 关 键 词 以 半 角 逗 号 隔 开 .." name="key" value="{$config.key}"
+                                            type="text" />
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">
+                                        网站描述
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <textarea name="desc" class="layui-textarea"
+                                            placeholder=" 对 网 站 的 描 述 ..">{$config.desc}</textarea>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">
+                                        ICP备案号
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" class="layui-input" placeholder=" 留 空 则 不 显 示 .."
+                                            name="icp" value="{$config.icp}" type="text" />
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">
+                                        樱花飘落
+                                    </label>
+                                    <div class="layui-input-block">
+                                        {if $config.cherry == 1}
+                                        <input type="radio" name="cherry" value="0" title="关闭">
+                                        <input type="radio" name="cherry" value="1" title="开启" checked>
+                                        {else}
+                                        <input type="radio" name="cherry" value="0" title="关闭" checked>
+                                        <input type="radio" name="cherry" value="1" title="开启">
+                                        {/if}
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">
+                                        背景音乐
+                                    </label>
+                                    <div class="layui-input-block">
+                                        {if $config.music == 1}
+                                        <input type="radio" name="music" value="0" title="关闭">
+                                        <input type="radio" name="music" value="1" title="开启" checked>
+                                        {else}
+                                        <input type="radio" name="music" value="0" title="关闭" checked>
+                                        <input type="radio" name="music" value="1" title="开启">
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                            <!--个人设置-->
+                            <div class="layui-tab-item">
+
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">
+                                        昵称
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" placeholder="请输入首页展示昵称" class="layui-input"
+                                            name="nickname" value="{$info.nickname}" type="text" />
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">
+                                        QQ号
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" placeholder="请输入QQ号，用于同步QQ头像" class="layui-input"
+                                            name="qq" value="{$admin.qq}" type="text" />
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">
+                                        签名设置
+                                    </label>
+                                    <div class="layui-input-block">
+                                        <input autocomplete="off" placeholder="请输入首页展示签名, 留空则不显示" class="layui-input"
+                                            name="sign" value="{$info.sign}" type="text" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-input-block" style="min-height: 80px;">
+                        <button type="submit" class="pear-btn pear-btn-primary submit" lay-submit
+                            lay-filter="submit">保存</button>
+                        <button type="reset" class="pear-btn">重置</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="/static/component/layui/layui.js"></script>
+    <script src="/static/component/pear/pear.js"></script>
+    <script>
+
+
+        layui.use(['form', 'button', 'toast', 'jquery', 'layer', 'code'], function () {
+            let form = layui.form;
+            let $ = layui.jquery;
+            let button = layui.button;
+            let toast = layui.toast;
+
+            form.on('submit(submit)', function (data) {
+                // 动画
+                var dom = button.load({
+                    elem: '.submit'
+                });
+                $.ajax({
+                    cache: false,
+                    url: "/admin/Submit/index",
+                    type: "POST",
+                    data: data.field,
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.code == 200) {
+                            dom.stop(function () {
+                                toast.success({ title: 'Success', message: res.msg, position: 'topCenter' });
+                            });
+                            setTimeout(() => {
+                                parent.layui.admin.refreshThis()
+                            }, 1500);
+                        } else {
+                            dom.stop(function () {
+                                toast.error({ title: 'Error', message: res.msg, position: 'topCenter' });
+                            });
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+</body>
+
+</html>

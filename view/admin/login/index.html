@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    {:token_meta()}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Login</title>
+    <!-- 样 式 文 件 -->
+    <link rel="stylesheet" href="/static/component/pear/css/pear.css" />
+    <link rel="stylesheet" href="/static/admin/css/other/login.css" />
+</head>
+
+<body background="/static/admin/images/background.svg" style="background-size: cover;">
+    <form class="layui-form" action="javascript:void(0);">
+        <div class="layui-form-item">
+            <img class="logo" src="/static/admin/images/logo.png" />
+            <div class="title">Msg Admin</div>
+            <div class="desc">
+                明 湖 区 最 具 影 响 力 的 设 计 规 范 之 一
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <input placeholder=" 管 理 员 账 号 " type="text" name="user" hover class="layui-input">
+        </div>
+        <div class="layui-form-item">
+            <input placeholder=" 管 理 员 密 码 " type="password" name="pass" hover class="layui-input">
+        </div>
+        <div class="layui-form-item">
+            <input placeholder=" 验 证 码 " type="text" name="code" hover class="code layui-input layui-input-inline">
+            <img onclick="imgcode()" id="code" src="{:captcha_src()}" class="codeImage" style="width: 120px;">
+        </div>
+        <div class="layui-form-item">
+            <button type="submit" class="pear-btn pear-btn-success login" lay-submit lay-filter="login">
+                登 入
+            </button>
+        </div>
+    </form>
+    <!-- 资 源 引 入 -->
+    <script src="/static/component/layui/layui.js"></script>
+    <script src="/static/component/pear/pear.js"></script>
+    <script>
+        //页面加载完成后，每五分钟刷新一次验证码
+        onload: {
+            setInterval(imgcode, 300000);
+        };
+
+        //刷新验证码方法
+        function imgcode() {
+            document.getElementById("code").setAttribute('src', '{:captcha_src()}?id=' + Math.random());
+        }
+
+        layui.use(['form', 'button', 'toast', 'jquery', 'layer', 'code'], function () {
+            let form = layui.form;
+            let button = layui.button;
+            let toast = layui.toast;
+            let $ = layui.jquery;
+
+            // 登 录 提 交
+            form.on('submit(login)', function (data) {
+                /// 动画
+                var dom = button.load({
+                    elem: '.login'
+                });
+                if (data.field.user == '') {
+                    setTimeout(() => {
+                        dom.stop(function () {
+                            toast.info({ title: 'Info', message: '管理员账号不能为空!', position: 'topCenter' });
+                        });
+                    }, 200);
+                } else if (data.field.pass == '') {
+                    setTimeout(() => {
+                        dom.stop(function () {
+                            toast.info({ title: 'Info', message: '管理员密码不能为空!', position: 'topCenter' });
+                        });
+                    }, 200);
+                } else if (data.field.code == '') {
+                    setTimeout(() => {
+                        dom.stop(function () {
+                            toast.info({ title: 'Info', message: '验证码不能为空!', position: 'topCenter' });
+                        });
+                    }, 200);
+                } else {
+                    $.ajax({
+                        cache: false,
+                        url: "/admin/login",
+                        type: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: data.field,
+                        dataType: "json",
+                        success: function (res) {
+                            console.log(res);
+                            if (res.code == 200) {
+                                dom.stop(function () {
+                                    toast.success({ title: 'Success', message: res.msg, position: 'topCenter' });
+                                });
+                                setTimeout(() => {
+                                    window.location.href = '/admin';
+                                }, 1500);
+                            } else {
+                                dom.stop(function () {
+                                    toast.error({ title: 'Error', message: res.msg, position: 'topCenter' });
+                                });
+                                imgcode()
+                            }
+                        }
+                    });
+                }
+                return false;
+            });
+        })
+    </script>
+</body>
+
+</html>

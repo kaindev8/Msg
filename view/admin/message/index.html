@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消息管理</title>
+    <link rel="stylesheet" href="/static/component/pear/css/pear.css" />
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">昵称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="realName" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="user-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            查询
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="user-table" lay-filter="user-table"></table>
+        </div>
+    </div>
+
+    <script type="text/html" id="user-toolbar">
+		    <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+		        <i class="layui-icon layui-icon-delete"></i>
+		        删除
+		    </button>
+	</script>
+
+    <script type="text/html" id="user-bar">
+		    <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+	</script>
+
+    <script type="text/html" id="user-enable">
+			<input type="checkbox" name="public" value="{{d.id}}" lay-skin="switch" lay-text="公开|私密" lay-filter="user-enable" {{ d.public == 1 ? 'checked' : '' }} />
+	</script>
+
+    <script src="/static/component/layui/layui.js"></script>
+    <script src="/static/component/pear/pear.js"></script>
+    <script>
+        layui.use(['table', 'form', 'jquery', 'common', 'toast', 'layer', 'code', 'admin'], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+            let common = layui.common;
+            let toast = layui.toast;
+
+            let MODULE_PATH = "/admin/Message";
+
+            let cols = [
+                [{
+                    type: 'checkbox'
+                },
+                {
+                    title: '昵称',
+                    field: 'nickname',
+                    align: 'center',
+                    width: 100
+                },
+                {
+                    title: '内容',
+                    field: 'content',
+                    align: 'center',
+                },
+                {
+                    title: '公开',
+                    field: 'public',
+                    align: 'center',
+                    templet: '#user-enable'
+                },
+                {
+                    title: '时间',
+                    field: 'time',
+                    align: 'center'
+                },
+                {
+                    title: '提交IP',
+                    field: 'ip',
+                    align: 'center'
+                },
+                {
+                    title: '操作',
+                    toolbar: '#user-bar',
+                    align: 'center',
+                    width: 130
+                }
+                ]
+            ]
+
+            table.render({
+                elem: '#user-table',
+                url: MODULE_PATH + '/data',
+                page: true,
+                cols: cols,
+                skin: 'line',
+                toolbar: '#user-toolbar',
+                defaultToolbar: [{
+                    title: '刷新',
+                    layEvent: 'refresh',
+                    icon: 'layui-icon-refresh',
+                }, 'filter', 'print', 'exports']
+            });
+
+            table.on('tool(user-table)', function (obj) {
+                if (obj.event === 'remove') {
+                    window.remove(obj);
+                }
+            });
+
+            table.on('toolbar(user-table)', function (obj) {
+                if (obj.event === 'batchRemove') {
+                    window.batchRemove(obj);
+                }
+            });
+
+            form.on('submit(user-query)', function (data) {
+                table.reload('user-table', {
+                    where: data.field
+                })
+                return false;
+            });
+
+            form.on('switch(user-enable)', function (obj) {
+                let loading = layer.load();
+                $.ajax({
+                    url: MODULE_PATH + "/public",
+                    dataType: "json",
+                    type: "POST",
+                    data: {
+                        id: this.value,
+                        public: obj.elem.checked
+                    },
+                    success: function (res) {
+                        layer.close(loading);
+                        if (res.code == 200) {
+                            toast.success({ title: 'Success', message: res.msg, position: 'topCenter' });
+                        } else {
+                            toast.error({ title: 'Error', message: res.msg, position: 'topCenter' });
+                        }
+                    }
+                });
+                // console.log(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
+            });
+
+            window.remove = function (obj) {
+                layer.confirm('确定要删除该消息?', {
+                    title: '提示'
+                }, function (index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        url: MODULE_PATH + "/remove",
+                        dataType: 'json',
+                        type: 'POST',
+                        data: {
+                            id: obj.data['id']
+                        },
+                        success: function (res) {
+                            layer.close(loading);
+                            if (res.code == 200) {
+                                toast.success({ title: 'Success', message: res.msg, position: 'topCenter' });
+                                setTimeout(() => {
+                                    table.reload('user-table')
+                                }, 1000);
+                            } else {
+                                toast.error({ title: 'Error', message: res.msg, position: 'topCenter' });
+                            }
+                        }
+                    })
+                });
+            }
+
+            window.batchRemove = function (obj) {
+
+                var checkIds = common.checkField(obj, 'id');
+                if (checkIds === "") {
+                    toast.info({ title: 'Info', message: '未选中数据', position: 'topCenter' });
+                    return false;
+                }
+                layer.confirm('确定要删除这些消息?', {
+                    title: '提示'
+                }, function (index) {
+                    console.log(checkIds);
+                    layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        url: MODULE_PATH + "/batchRemove",
+                        dataType: 'json',
+                        data: {
+                            id: checkIds
+                        },
+                        type: 'POST',
+                        success: function (res) {
+                            layer.close(loading);
+                            if (res.code == 200) {
+                                toast.success({ title: 'Success', message: res.msg, position: 'topCenter' });
+                                setTimeout(() => {
+                                    table.reload('user-table')
+                                }, 1500);
+                            } else {
+                                toast.error({ title: 'Error', message: res.msg, position: 'topCenter' });
+                            }
+                        }
+                    })
+                });
+            }
+
+            window.refresh = function (param) {
+                table.reload('user-table');
+            }
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+[
+	{
+		"id": 1,
+		"title": "通知",
+		"children": []
+	},
+	{
+		"id": 2,
+		"title": "消息",
+		"children": []
+	},
+	{
+		"id": 3,
+		"title": "代办",
+		"children": []
+	}
+]
