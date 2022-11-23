@@ -1,7 +1,7 @@
 # Msg
 
 **项目预览**
-![屏幕截图(4).png](https://img.cdn.apipost.cn/client/user/1189043/avatar/5d46c0bfb5f09c093207cedd081a80576373ceae8e5d3.png)
+![项目预览](https://img.cdn.apipost.cn/client/user/1189043/avatar/5d46c0bfb5f09c093207cedd081a80576373ceae8e5d3.png)
 
 **项目地址**
 
@@ -23,7 +23,7 @@ PHP8.0 + MySQL5.7
 
 		/public
 
-5. 设置伪静态为
+5. Nginx设置伪静态为
 
 ```
 location ~* (runtime|application)/{
